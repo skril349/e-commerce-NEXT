@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Container,
   Menu as SemanticMenu,
@@ -7,7 +7,15 @@ import {
   Label,
 } from "semantic-ui-react";
 import Link from "next/link";
+import BasicModal from "../../Modal/BasicModal";
+import Auth from "../../Auth";
+
 export default function Menu() {
+  const [showModal, setShowModal] = useState(false);
+  const [titleModal, setTitleModal] = useState("Iniciar Sesion");
+  const onShowModal = () => setShowModal(true);
+
+  const onCloseModal = () => setShowModal(false);
   return (
     <div className="menu">
       <Container>
@@ -16,10 +24,18 @@ export default function Menu() {
             <MenuPlatform />
           </Grid.Column>
           <Grid.Column className="menu__right" width={10}>
-            <MenuOptions />
+            <MenuOptions onShowModal={onShowModal} />
           </Grid.Column>
         </Grid>
       </Container>
+      <BasicModal
+        show={showModal}
+        setShow={setShowModal}
+        title={titleModal}
+        size="small"
+      >
+        <Auth onCloseModal={onCloseModal} setTitleModal={setTitleModal}></Auth>
+      </BasicModal>
     </div>
   );
 }
@@ -40,10 +56,11 @@ function MenuPlatform() {
   );
 }
 
-function MenuOptions() {
+function MenuOptions(props) {
+  const { onShowModal } = props;
   return (
     <SemanticMenu>
-      <SemanticMenu.Item>
+      <SemanticMenu.Item onClick={onShowModal}>
         <Icon name="user outline"></Icon>
         Mi Cuenta
       </SemanticMenu.Item>
