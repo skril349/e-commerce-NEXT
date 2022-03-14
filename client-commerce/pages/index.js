@@ -1,7 +1,9 @@
+import React from "react";
+import BasicLayout from "../layouts/BasicLayout";
 export default function Home() {
   return (
-    <div className="home">
-      <h1>estamos en next.js</h1>
-    </div>
+    <BasicLayout>
+      <h1>Estamos en la Home</h1>
+    </BasicLayout>
   );
 }
