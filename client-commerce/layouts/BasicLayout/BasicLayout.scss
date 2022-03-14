@@ -1,7 +1,16 @@
 .basic-layout {
   min-height: 100vh;
-  &-content {
+  background-image: url("/bg-web.jpg");
+  background-size: cover;
+  background-position: center;
+  .content {
     background-color: $background-grey-light;
-    height: 100vh;
+    height: calc(100vh - 130px);
+    -webkit-box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.75);
+    overflow-y: scroll;
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 }
