@@ -15,7 +15,6 @@ import { getMeApi } from "../../../api/user";
 
 export default function Menu() {
   const { logout, auth } = useAuth();
-
   useEffect(() => {
     (async () => {
       const response = await getMeApi(logout);
