@@ -1,21 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Menu as SemanticMenu,
   Grid,
   Icon,
   Label,
+  Button,
 } from "semantic-ui-react";
 import Link from "next/link";
 import BasicModal from "../../Modal/BasicModal";
 import Auth from "../../Auth";
+import useAuth from "../../../hooks/useAuth";
+import { getMeApi } from "../../../api/user";
 
 export default function Menu() {
+  const { logout, auth } = useAuth();
+
+  useEffect(() => {
+    (async () => {
+      const response = await getMeApi(logout);
+      setUser(response);
+    })();
+  }, [auth]);
+
+  const [user, setUser] = useState(undefined);
   const [showModal, setShowModal] = useState(false);
   const [titleModal, setTitleModal] = useState("Iniciar Sesion");
+
   const onShowModal = () => setShowModal(true);
 
   const onCloseModal = () => setShowModal(false);
+
   return (
     <div className="menu">
       <Container>
@@ -24,7 +39,13 @@ export default function Menu() {
             <MenuPlatform />
           </Grid.Column>
           <Grid.Column className="menu__right" width={10}>
-            <MenuOptions onShowModal={onShowModal} />
+            {user !== undefined && (
+              <MenuOptions
+                onShowModal={onShowModal}
+                user={user}
+                logout={logout}
+              />
+            )}
           </Grid.Column>
         </Grid>
       </Container>
@@ -57,13 +78,45 @@ function MenuPlatform() {
 }
 
 function MenuOptions(props) {
-  const { onShowModal } = props;
+  const { onShowModal, logout, user } = props;
   return (
     <SemanticMenu>
-      <SemanticMenu.Item onClick={onShowModal}>
-        <Icon name="user outline"></Icon>
-        Mi Cuenta
-      </SemanticMenu.Item>
+      {user ? (
+        <>
+          <Link href="/orders">
+            <SemanticMenu.Item as="a">
+              <Icon name="game" /> Mis pedidos
+            </SemanticMenu.Item>
+          </Link>
+
+          <Link href="/wish-list">
+            <SemanticMenu.Item as="a">
+              <Icon name="heart outline" /> Mis favoritos
+            </SemanticMenu.Item>
+          </Link>
+
+          <Link href="/account">
+            <SemanticMenu.Item as="a">
+              <Icon name="user outline" /> {user.name} {user.lastname}
+            </SemanticMenu.Item>
+          </Link>
+
+          <Link href="/cart">
+            <SemanticMenu.Item as="a" className="m-0">
+              <Icon name="cart" />
+            </SemanticMenu.Item>
+          </Link>
+
+          <SemanticMenu.Item onClick={logout} className="m-0">
+            <Icon name="power off" />
+          </SemanticMenu.Item>
+        </>
+      ) : (
+        <SemanticMenu.Item onClick={onShowModal}>
+          <Icon name="user outline"></Icon>
+          Mi Cuenta
+        </SemanticMenu.Item>
+      )}
     </SemanticMenu>
   );
 }
