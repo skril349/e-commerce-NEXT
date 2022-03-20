@@ -12,7 +12,8 @@ import BasicModal from "../../Modal/BasicModal";
 import Auth from "../../Auth";
 import useAuth from "../../../hooks/useAuth";
 import { getMeApi } from "../../../api/user";
-
+import { getPlatformApi } from "../../../api/platform";
+import { map } from "lodash";
 export default function Menu() {
   const { logout, auth } = useAuth();
   useEffect(() => {
@@ -22,10 +23,19 @@ export default function Menu() {
     })();
   }, [auth]);
 
+  useEffect(() => {
+    (async () => {
+      const response = await getPlatformApi();
+      console.log("response=", response);
+
+      setPlatforms(response);
+    })();
+  }, []);
+
   const [user, setUser] = useState(undefined);
   const [showModal, setShowModal] = useState(false);
   const [titleModal, setTitleModal] = useState("Iniciar Sesion");
-
+  const [platforms, setPlatforms] = useState([]);
   const onShowModal = () => setShowModal(true);
 
   const onCloseModal = () => setShowModal(false);
@@ -35,7 +45,7 @@ export default function Menu() {
       <Container>
         <Grid>
           <Grid.Column className="menu__left" width={6}>
-            <MenuPlatform />
+            <MenuPlatform platforms={platforms} />
           </Grid.Column>
           <Grid.Column className="menu__right" width={10}>
             {user !== undefined && (
@@ -60,18 +70,17 @@ export default function Menu() {
   );
 }
 
-function MenuPlatform() {
+function MenuPlatform(props) {
+  const { platforms } = props;
   return (
     <SemanticMenu>
-      <Link href="/play-station">
-        <SemanticMenu.Item as="a">PlayStation</SemanticMenu.Item>
-      </Link>
-      <Link href="/xbox">
-        <SemanticMenu.Item as="a">X-Box</SemanticMenu.Item>
-      </Link>
-      <Link href="/switch">
-        <SemanticMenu.Item as="a">Switch</SemanticMenu.Item>
-      </Link>
+      {map(platforms, (platform) => (
+        <Link href={`/games/${platform.url}`}>
+          <SemanticMenu.Item as="a" name={platform.url}>
+            {platform.title}
+          </SemanticMenu.Item>
+        </Link>
+      ))}
     </SemanticMenu>
   );
 }
