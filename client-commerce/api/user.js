@@ -13,7 +13,6 @@ export async function registerApi(formData) {
     };
     const response = await fetch(url, params);
     const result = await response.json();
-    console.log(result);
     return result;
   } catch (error) {
     console.log(error);
@@ -33,7 +32,6 @@ export async function loginApi(formData) {
     };
     const response = await fetch(url, params);
     const result = await response.json();
-    console.log(result);
     return result;
   } catch (error) {
     console.log(error);
@@ -51,7 +49,6 @@ export async function resetPasswordApi(email) {
       },
       body: JSON.stringify({ email }),
     };
-    console.log(params);
 
     //const response = await fetch(url, params);
     const result = await response.json();

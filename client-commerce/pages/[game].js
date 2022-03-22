@@ -4,10 +4,11 @@ import { useRouter } from "next/router";
 import { getGameByUrlApi } from "../api/game";
 import HeaderGame from "../components/Game/HeaderGame/HeaderGame";
 import TabsGame from "../components/Game/TabsGame/TabsGame";
+import { size } from "lodash";
 export default function Game() {
+  const router = useRouter();
   const { query } = useRouter();
   const [game, setGame] = useState(null);
-  console.log("game", game);
 
   useEffect(() => {
     (async () => {
@@ -16,7 +17,11 @@ export default function Game() {
     })();
   }, [query]);
 
-  if (!game) return null;
+  if (!game || game === []) {
+    console.log(game);
+    return null;
+  }
+
   return (
     <BasicLayout className="game">
       <HeaderGame game={game} />

@@ -14,6 +14,8 @@ import useAuth from "../../../hooks/useAuth";
 import { getMeApi } from "../../../api/user";
 import { getPlatformApi } from "../../../api/platform";
 import { map } from "lodash";
+import useCart from "../../../hooks/useCart";
+
 export default function Menu() {
   const { logout, auth } = useAuth();
   useEffect(() => {
@@ -26,7 +28,6 @@ export default function Menu() {
   useEffect(() => {
     (async () => {
       const response = await getPlatformApi();
-      console.log("response=", response);
 
       setPlatforms(response);
     })();
@@ -87,6 +88,7 @@ function MenuPlatform(props) {
 
 function MenuOptions(props) {
   const { onShowModal, logout, user } = props;
+  const { productsCart } = useCart();
   return (
     <SemanticMenu>
       {user ? (
@@ -97,7 +99,7 @@ function MenuOptions(props) {
             </SemanticMenu.Item>
           </Link>
 
-          <Link href="/wish-list">
+          <Link href="/wishlist">
             <SemanticMenu.Item as="a">
               <Icon name="heart outline" /> Mis favoritos
             </SemanticMenu.Item>
@@ -112,6 +114,11 @@ function MenuOptions(props) {
           <Link href="/cart">
             <SemanticMenu.Item as="a" className="m-0">
               <Icon name="cart" />
+              {productsCart > 0 && (
+                <Label color="red" floating circular>
+                  {productsCart}
+                </Label>
+              )}
             </SemanticMenu.Item>
           </Link>
 

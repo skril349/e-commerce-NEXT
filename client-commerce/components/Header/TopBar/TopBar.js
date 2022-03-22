@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Grid, Image, Input } from "semantic-ui-react";
 import Link from "next/link";
-
+import { useRouter } from "next/router";
 export default function TopBar() {
   return (
     <div className="top-bar">
@@ -30,5 +30,22 @@ function Logo() {
 }
 
 function Search() {
-  return <Input id="search-game" icon={{ name: "search" }} />;
+  const router = useRouter();
+  const [searchStr, setSearchStr] = useState("");
+  const [load, setLoad] = useState(false);
+  useEffect(() => {
+    if (load) {
+      router.push(`/search?query=${searchStr}`);
+    }
+    setLoad(true);
+  }, [searchStr]);
+
+  return (
+    <Input
+      id="search-game"
+      icon={{ name: "search" }}
+      value={router.query.query}
+      onChange={(_, data) => setSearchStr(data.value)}
+    />
+  );
 }
