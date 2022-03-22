@@ -47,7 +47,13 @@ function FullCart(props) {
         reloadCart={reloadCart}
       />
       <AddressShipping setAddress={setAddress} />
-      {address && <Payment products={productsData} address={address} />}
+      {address && (
+        <Payment
+          products={productsData}
+          address={address}
+          setReloadCart={setReloadCart}
+        />
+      )}
     </BasicLayout>
   );
 }
